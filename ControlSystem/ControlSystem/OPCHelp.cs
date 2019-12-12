@@ -113,7 +113,7 @@ namespace ControlSystem
             }
         }
 
-        public OPCGroup SetGroupProperty(OPCGroup opcGroup, int UpdateRate)
+        public OPCGroup SetGroupProperty(OPCGroup opcGroup, int UpdateRate, DIOPCGroupEvent_DataChangeEventHandler e)
         {
             try
             {
@@ -121,16 +121,71 @@ namespace ControlSystem
                 opcGroup.DeadBand = 0;
                 opcGroup.UpdateRate = UpdateRate;
                 opcGroup.IsSubscribed = true;
-                //opcGroup.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(opcGroup_DataChanged);
+                opcGroup.DataChange +=e;
                 //opcGroup.AsyncWriteComplete += new DIOPCGroupEvent_AsyncWriteCompleteEventHandler(opcGroup_AsyncWriteComplete);
                 return opcGroup;
             }
             catch (Exception err)
             {
                 Console.WriteLine("设置组属性出错" + err.Message);
-                return null;
-               
+                return null;               
             }
+        }
+        public OPCItems GetOpcItems(OPCGroup opcGroup)
+        {
+            try
+            {
+                return opcGroup.OPCItems;
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("获取opc Items 出错" + err.Message);
+                return null;
+            }
+        }
+
+        public Dictionary<string,string>AddItems(string[]itemName,OPCItems opcItems,out OPCItem opcItem,out List<string>itemNames,out List<int> itemHandleClient)
+        {
+            itemNames = new List<string>();
+            Dictionary<string, string> itemValues = new Dictionary<string, string>();
+            itemHandleClient = new List<int>();
+            opcItem = null;
+            for (int i = 0; i < itemName.Length; i++)
+            {
+                itemNames.Add(itemName[i]);
+                itemValues.Add(itemName[i],"");
+            }
+            for (int i = 0; i < itemName.Length; i++)
+            {
+                itemHandleClient.Add(itemHandleClient.Count!=0?itemHandleClient[itemHandleClient.Count-1]+1:1);
+                opcItem = opcItems.AddItem(itemName[i],itemHandleClient[itemHandleClient.Count-1]);
+            }
+            return itemValues;
+
+        }
+        public bool Contains(string itemName, Dictionary<string, string> itemValues)
+        {
+            foreach (string item in itemValues.Keys)
+            {
+                if (item == itemName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public string []GetItemValues(string []getItemNames,Dictionary<string,string>itemValues)
+        {
+            string[] getedValues = new string[getItemNames.Length];
+            for (int i = 0; i < getItemNames.Length; i++)
+            {
+                if (Contains(getedValues[i], itemValues))
+                {
+                    itemValues.TryGetValue(getItemNames[i], out getedValues[i]);
+                }
+            }
+            return getedValues;
         }
 
     }
