@@ -41,7 +41,7 @@
             this.tbx_ip = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rtb_msg = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -55,7 +55,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(306, 450);
+            this.groupBox1.Size = new System.Drawing.Size(402, 450);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "配置相关";
@@ -70,14 +70,14 @@
             this.groupBox4.Controls.Add(this.lbx_pointlist);
             this.groupBox4.Location = new System.Drawing.Point(3, 165);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(300, 282);
+            this.groupBox4.Size = new System.Drawing.Size(402, 282);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "点名称配置";
             // 
             // btn_del
             // 
-            this.btn_del.Location = new System.Drawing.Point(216, 78);
+            this.btn_del.Location = new System.Drawing.Point(318, 49);
             this.btn_del.Name = "btn_del";
             this.btn_del.Size = new System.Drawing.Size(75, 23);
             this.btn_del.TabIndex = 2;
@@ -87,7 +87,7 @@
             // 
             // btn_add
             // 
-            this.btn_add.Location = new System.Drawing.Point(216, 49);
+            this.btn_add.Location = new System.Drawing.Point(318, 20);
             this.btn_add.Name = "btn_add";
             this.btn_add.Size = new System.Drawing.Size(75, 23);
             this.btn_add.TabIndex = 1;
@@ -104,7 +104,7 @@
             this.lbx_pointlist.ItemHeight = 12;
             this.lbx_pointlist.Location = new System.Drawing.Point(3, 17);
             this.lbx_pointlist.Name = "lbx_pointlist";
-            this.lbx_pointlist.Size = new System.Drawing.Size(207, 268);
+            this.lbx_pointlist.Size = new System.Drawing.Size(309, 268);
             this.lbx_pointlist.TabIndex = 0;
             // 
             // groupBox3
@@ -117,14 +117,14 @@
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Location = new System.Drawing.Point(12, 20);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(288, 139);
+            this.groupBox3.Size = new System.Drawing.Size(390, 139);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "连接配置";
             // 
             // tbx_name
             // 
-            this.tbx_name.Location = new System.Drawing.Point(98, 57);
+            this.tbx_name.Location = new System.Drawing.Point(140, 57);
             this.tbx_name.Name = "tbx_name";
             this.tbx_name.Size = new System.Drawing.Size(184, 21);
             this.tbx_name.TabIndex = 5;
@@ -132,7 +132,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 60);
+            this.label2.Location = new System.Drawing.Point(51, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 12);
             this.label2.TabIndex = 4;
@@ -140,7 +140,7 @@
             // 
             // btn_disconnect
             // 
-            this.btn_disconnect.Location = new System.Drawing.Point(207, 112);
+            this.btn_disconnect.Location = new System.Drawing.Point(296, 99);
             this.btn_disconnect.Name = "btn_disconnect";
             this.btn_disconnect.Size = new System.Drawing.Size(75, 23);
             this.btn_disconnect.TabIndex = 3;
@@ -150,7 +150,7 @@
             // 
             // btn_connect
             // 
-            this.btn_connect.Location = new System.Drawing.Point(126, 112);
+            this.btn_connect.Location = new System.Drawing.Point(199, 99);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(75, 23);
             this.btn_connect.TabIndex = 2;
@@ -160,7 +160,7 @@
             // 
             // tbx_ip
             // 
-            this.tbx_ip.Location = new System.Drawing.Point(98, 20);
+            this.tbx_ip.Location = new System.Drawing.Point(140, 20);
             this.tbx_ip.Name = "tbx_ip";
             this.tbx_ip.Size = new System.Drawing.Size(184, 21);
             this.tbx_ip.TabIndex = 1;
@@ -168,7 +168,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 26);
+            this.label1.Location = new System.Drawing.Point(51, 26);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 0;
@@ -179,23 +179,23 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.richTextBox1);
-            this.groupBox2.Location = new System.Drawing.Point(312, 0);
+            this.groupBox2.Controls.Add(this.rtb_msg);
+            this.groupBox2.Location = new System.Drawing.Point(408, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(488, 450);
+            this.groupBox2.Size = new System.Drawing.Size(392, 450);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行日志";
             // 
-            // richTextBox1
+            // rtb_msg
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 17);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox1.Size = new System.Drawing.Size(482, 430);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.rtb_msg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtb_msg.Location = new System.Drawing.Point(3, 17);
+            this.rtb_msg.Name = "rtb_msg";
+            this.rtb_msg.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtb_msg.Size = new System.Drawing.Size(386, 430);
+            this.rtb_msg.TabIndex = 0;
+            this.rtb_msg.Text = "";
             // 
             // OPCClient配置
             // 
@@ -230,6 +230,6 @@
         private System.Windows.Forms.Button btn_del;
         private System.Windows.Forms.Button btn_add;
         private System.Windows.Forms.ListBox lbx_pointlist;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rtb_msg;
     }
 }

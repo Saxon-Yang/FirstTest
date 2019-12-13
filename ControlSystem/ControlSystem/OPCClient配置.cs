@@ -1,10 +1,12 @@
-﻿using System;
+﻿using OPCAutomation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,9 +18,9 @@ namespace ControlSystem
         {
             InitializeComponent();
 
-            for (int i = 0; i < 1500; i++)
+            for (int i = 0; i < 4000; i++)
             {
-                lbx_pointlist.Items.Add("point"+i);  
+                lbx_pointlist.Items.Add("point.AAAAAA.aaaaaa.ccccccc.cccccc.ccccccc"+i);  
             }
         }
 
@@ -41,12 +43,33 @@ namespace ControlSystem
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
+            Thread th=null;
             btn_connect.Enabled = false;
             btn_add.Enabled = false;
             btn_del.Enabled = false;
 
-            OPCHelp opcHelp = new OPCHelp();
+            if (tbx_ip.Text!=""&&tbx_name.Text!="")
+            {
+                th = new Thread(new ThreadStart(Run));
+                th.Start();
+                 
+            }
+            else
+            {
+                MessageBox.Show("服务器IP和名称不能为空！");
+            }
 
+        }
+
+        private  void Run()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                Invoke((EventHandler)delegate {
+                    rtb_msg.AppendText("wo kai shi gongzuo le  wo sji di"+i+1+"ci xunhuan "+"\r\n");
+                });
+                Thread.Sleep(1000);
+            }
         }
 
         private void btn_disconnect_Click(object sender, EventArgs e)
