@@ -60,20 +60,29 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_Add.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_Add.Designer.cs">
+      <DependentUpon>Form_Add.cs</DependentUpon>
+    </Compile>
     <Compile Include="MQTTHelp.cs" />
     <Compile Include="OPCHelp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetOpc.cs">
+    <Compile Include="OPCClient配置.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetOpc.Designer.cs">
-      <DependentUpon>SetOpc.cs</DependentUpon>
+    <Compile Include="OPCClient配置.Designer.cs">
+      <DependentUpon>OPCClient配置.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
+    <None Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Form_Add.resx">
+      <DependentUpon>Form_Add.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -82,9 +91,10 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SetOpc.resx">
-      <DependentUpon>SetOpc.cs</DependentUpon>
+    <EmbeddedResource Include="OPCClient配置.resx">
+      <DependentUpon>OPCClient配置.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -109,6 +119,11 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ico\bigsetting.ico" />
+    <Content Include="ico\setting %281%29.ico" />
+    <Content Include="ico\setting.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace ControlSystem
 {
-    partial class SetOpc
+    partial class OPCClient配置
     {
         /// <summary>
         /// Required designer variable.
@@ -30,20 +30,22 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.btn_del = new System.Windows.Forms.Button();
+            this.btn_add = new System.Windows.Forms.Button();
+            this.lbx_pointlist = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbx_name = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btn_disconnect = new System.Windows.Forms.Button();
+            this.btn_connect = new System.Windows.Forms.Button();
+            this.tbx_ip = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -63,9 +65,9 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.button4);
-            this.groupBox4.Controls.Add(this.button3);
-            this.groupBox4.Controls.Add(this.listBox1);
+            this.groupBox4.Controls.Add(this.btn_del);
+            this.groupBox4.Controls.Add(this.btn_add);
+            this.groupBox4.Controls.Add(this.lbx_pointlist);
             this.groupBox4.Location = new System.Drawing.Point(3, 165);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(300, 282);
@@ -73,43 +75,45 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "点名称配置";
             // 
-            // button4
+            // btn_del
             // 
-            this.button4.Location = new System.Drawing.Point(216, 78);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btn_del.Location = new System.Drawing.Point(216, 78);
+            this.btn_del.Name = "btn_del";
+            this.btn_del.Size = new System.Drawing.Size(75, 23);
+            this.btn_del.TabIndex = 2;
+            this.btn_del.Text = "移除";
+            this.btn_del.UseVisualStyleBackColor = true;
+            this.btn_del.Click += new System.EventHandler(this.btn_del_Click);
             // 
-            // button3
+            // btn_add
             // 
-            this.button3.Location = new System.Drawing.Point(216, 49);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_add.Location = new System.Drawing.Point(216, 49);
+            this.btn_add.Name = "btn_add";
+            this.btn_add.Size = new System.Drawing.Size(75, 23);
+            this.btn_add.TabIndex = 1;
+            this.btn_add.Text = "增加";
+            this.btn_add.UseVisualStyleBackColor = true;
+            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
             // 
-            // listBox1
+            // lbx_pointlist
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lbx_pointlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(3, 17);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(207, 268);
-            this.listBox1.TabIndex = 0;
+            this.lbx_pointlist.FormattingEnabled = true;
+            this.lbx_pointlist.ItemHeight = 12;
+            this.lbx_pointlist.Location = new System.Drawing.Point(3, 17);
+            this.lbx_pointlist.Name = "lbx_pointlist";
+            this.lbx_pointlist.Size = new System.Drawing.Size(207, 268);
+            this.lbx_pointlist.TabIndex = 0;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.textBox2);
+            this.groupBox3.Controls.Add(this.tbx_name);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Controls.Add(this.button2);
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.textBox1);
+            this.groupBox3.Controls.Add(this.btn_disconnect);
+            this.groupBox3.Controls.Add(this.btn_connect);
+            this.groupBox3.Controls.Add(this.tbx_ip);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Location = new System.Drawing.Point(12, 20);
             this.groupBox3.Name = "groupBox3";
@@ -118,12 +122,12 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "连接配置";
             // 
-            // textBox2
+            // tbx_name
             // 
-            this.textBox2.Location = new System.Drawing.Point(98, 57);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(184, 21);
-            this.textBox2.TabIndex = 5;
+            this.tbx_name.Location = new System.Drawing.Point(98, 57);
+            this.tbx_name.Name = "tbx_name";
+            this.tbx_name.Size = new System.Drawing.Size(184, 21);
+            this.tbx_name.TabIndex = 5;
             // 
             // label2
             // 
@@ -134,30 +138,32 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "OPCServerName";
             // 
-            // button2
+            // btn_disconnect
             // 
-            this.button2.Location = new System.Drawing.Point(207, 112);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_disconnect.Location = new System.Drawing.Point(207, 112);
+            this.btn_disconnect.Name = "btn_disconnect";
+            this.btn_disconnect.Size = new System.Drawing.Size(75, 23);
+            this.btn_disconnect.TabIndex = 3;
+            this.btn_disconnect.Text = "断开";
+            this.btn_disconnect.UseVisualStyleBackColor = true;
+            this.btn_disconnect.Click += new System.EventHandler(this.btn_disconnect_Click);
             // 
-            // button1
+            // btn_connect
             // 
-            this.button1.Location = new System.Drawing.Point(126, 112);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_connect.Location = new System.Drawing.Point(126, 112);
+            this.btn_connect.Name = "btn_connect";
+            this.btn_connect.Size = new System.Drawing.Size(75, 23);
+            this.btn_connect.TabIndex = 2;
+            this.btn_connect.Text = "连接";
+            this.btn_connect.UseVisualStyleBackColor = true;
+            this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
             // 
-            // textBox1
+            // tbx_ip
             // 
-            this.textBox1.Location = new System.Drawing.Point(98, 20);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(184, 21);
-            this.textBox1.TabIndex = 1;
+            this.tbx_ip.Location = new System.Drawing.Point(98, 20);
+            this.tbx_ip.Name = "tbx_ip";
+            this.tbx_ip.Size = new System.Drawing.Size(184, 21);
+            this.tbx_ip.TabIndex = 1;
             // 
             // label1
             // 
@@ -173,6 +179,7 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.richTextBox1);
             this.groupBox2.Location = new System.Drawing.Point(312, 0);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(488, 450);
@@ -180,20 +187,30 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "运行日志";
             // 
-            // SetOpc
+            // richTextBox1
+            // 
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(3, 17);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.richTextBox1.Size = new System.Drawing.Size(482, 430);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            // 
+            // OPCClient配置
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Name = "SetOpc";
+            this.Name = "OPCClient配置";
             this.Text = "SetOpc";
             this.groupBox1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -203,15 +220,16 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button btn_disconnect;
+        private System.Windows.Forms.Button btn_connect;
+        private System.Windows.Forms.TextBox tbx_ip;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbx_name;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button btn_del;
+        private System.Windows.Forms.Button btn_add;
+        private System.Windows.Forms.ListBox lbx_pointlist;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
