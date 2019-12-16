@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btn_del = new System.Windows.Forms.Button();
@@ -42,6 +43,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rtb_msg = new System.Windows.Forms.RichTextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -197,6 +199,12 @@
             this.rtb_msg.TabIndex = 0;
             this.rtb_msg.Text = "";
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // OPCClient配置
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -231,5 +239,6 @@
         private System.Windows.Forms.Button btn_add;
         private System.Windows.Forms.ListBox lbx_pointlist;
         private System.Windows.Forms.RichTextBox rtb_msg;
+        private System.Windows.Forms.Timer timer1;
     }
 }
