@@ -122,7 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ico\bigsetting.ico" />
-    <Content Include="ico\setting %281%29.ico" />
     <Content Include="ico\setting.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

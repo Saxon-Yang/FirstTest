@@ -102,7 +102,7 @@ namespace ControlSystem
             try
             {
                 OPCGroups groups = opcServer.OPCGroups;
-                OPCGroup group = groups.Add("OPCDotNetGroup");
+                OPCGroup group = groups.Add("OPCDotNetGroup1");
                 return group;
             }
             catch (Exception err)
@@ -187,6 +187,33 @@ namespace ControlSystem
             }
             return getedValues;
         }
+        public OPCBrowser CreateOPCBrowser(OPCServer opcServer)
+        {
+            try
+            {
+                return opcServer.CreateBrowser();
+            }
+            catch (Exception err)
+            {
 
+                Console.WriteLine("创建opcBrowser出错" + err.Message);
+                return null;
+            }
+        }
+
+        public List<string> RecurBrowse(OPCBrowser opcBrowser)
+        {
+            List<string> opcNodeNameList = new List<string>();
+
+            //展开分支
+            opcBrowser.ShowBranches();
+            //展开叶子
+            opcBrowser.ShowLeafs(true);
+            foreach (object item in opcBrowser)
+            {
+                opcNodeNameList.Add(item.ToString());
+            }
+            return opcNodeNameList;
+        }
     }
 }
