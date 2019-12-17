@@ -122,7 +122,6 @@ namespace ControlSystem
                 opcGroup.UpdateRate = UpdateRate;
                 opcGroup.IsSubscribed = true;
                 opcGroup.DataChange +=e;
-                //opcGroup.AsyncWriteComplete += new DIOPCGroupEvent_AsyncWriteCompleteEventHandler(opcGroup_AsyncWriteComplete);
                 return opcGroup;
             }
             catch (Exception err)

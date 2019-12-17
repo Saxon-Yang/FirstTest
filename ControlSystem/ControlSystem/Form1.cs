@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -6,6 +7,9 @@ namespace ControlSystem
 {
     public partial class Form1 : Form
     {
+
+        public static Dictionary<string, int> index = new Dictionary<string, int>();
+        public static int count = 0;
         public Form1()
         {
             InitializeComponent();
@@ -24,10 +28,11 @@ namespace ControlSystem
                 form.Text = name;
                 form.MdiParent = this;
                 form.Show();
+                index.Add(name, count++);
             }
             else if (form!=null &&isOpen!=null)
             {
-                form.Activate();
+                xtraTabbedMdiManager1.SelectedPage = xtraTabbedMdiManager1.Pages[index[name]];
             }
         }
     }

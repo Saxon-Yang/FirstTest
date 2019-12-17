@@ -214,6 +214,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "OPCClient配置";
             this.Text = "SetOpc";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OPCClient配置_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);

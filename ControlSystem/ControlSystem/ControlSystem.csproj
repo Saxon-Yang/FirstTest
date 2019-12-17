@@ -66,7 +66,12 @@
     <Compile Include="Form_Add.Designer.cs">
       <DependentUpon>Form_Add.cs</DependentUpon>
     </Compile>
-    <Compile Include="MQTTHelp.cs" />
+    <Compile Include="MQTTClient配置.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MQTTClient配置.Designer.cs">
+      <DependentUpon>MQTTClient配置.cs</DependentUpon>
+    </Compile>
     <Compile Include="OPCHelp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +87,9 @@
     <None Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Form_Add.resx">
       <DependentUpon>Form_Add.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MQTTClient配置.resx">
+      <DependentUpon>MQTTClient配置.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -122,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ico\bigsetting.ico" />
+    <None Include="ico\add.ico" />
+    <None Include="ico\del.ico" />
+    <None Include="ico\send.ico" />
     <Content Include="ico\setting.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
