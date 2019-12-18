@@ -194,6 +194,7 @@
             this.rtb_msg.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtb_msg.Location = new System.Drawing.Point(3, 17);
             this.rtb_msg.Name = "rtb_msg";
+            this.rtb_msg.ReadOnly = true;
             this.rtb_msg.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtb_msg.Size = new System.Drawing.Size(386, 430);
             this.rtb_msg.TabIndex = 0;

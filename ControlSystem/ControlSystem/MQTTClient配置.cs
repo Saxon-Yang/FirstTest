@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace ControlSystem
 {
     public partial class MQTTClient配置 : Form
     {
+        private delegate void ShowMessage(string msg);
+        private ShowMessage showMessage;
         string IP = "";
         string PassWord = "";
         Thread th = null;
@@ -22,7 +18,6 @@ namespace ControlSystem
         {
             InitializeComponent();
         }
-
         private void MQTTClient配置_FormClosed(object sender, FormClosedEventArgs e)
         {
             Form1.count -= 1;
@@ -35,8 +30,8 @@ namespace ControlSystem
             btn_add_write.Enabled = false;
             btn_del_read.Enabled = false;
             btn_del_write.Enabled = false;
-            btn_disconnect.Enabled = false;
-            if (tbx_ip.Text!=null)
+            btn_connect.Enabled = false;
+            if (tbx_ip.Text != null)
             {
                 IP = tbx_ip.Text;
 
@@ -53,12 +48,58 @@ namespace ControlSystem
             try
             {
                 client = new MqttClient(IP);
-                client.Connect()
+                string clientId = Guid.NewGuid().ToString();
+                client.Connect(clientId);
+                client.Subscribe(new string[] { "/home/temperature" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+                client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            string msg = System.Text.Encoding.UTF8.GetString(e.Message);
+            BeginInvoke(showMessage = xx =>
+            {
+                rtb_msg.AppendText("收到" + e.Topic + "消息：" + xx + "\r\n");
+            }, msg
+            );
+        }
+
+        private void btn_disconnect_Click(object sender, EventArgs e)
+        {
+
+
+            if (client != null)
+            {
+                th.Abort();
+                client.Disconnect();
+                client = null;
+                btn_add_read.Enabled = true;
+                btn_add_write.Enabled = true;
+                btn_del_read.Enabled = true;
+                btn_del_write.Enabled = true;
+                btn_connect.Enabled = true;
+                rtb_msg.AppendText("断开与MqttServer连接！\r\n");
+            }
+            else
+            {
+                rtb_msg.AppendText("与MqttServer连接已断开！\r\n");
+            }
+
+
+            
+        }
+
+        private void btn_add_read_Click(object sender, EventArgs e)
+        {
+            Form_ADD_Read fm = new Form_ADD_Read();
+            if (fm.ShowDialog()==DialogResult.OK)
+            {
+                listBoxControl1.Items.Add(fm.Topic);
             }
         }
     }

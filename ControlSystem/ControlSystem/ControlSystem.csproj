@@ -66,6 +66,12 @@
     <Compile Include="Form_Add.Designer.cs">
       <DependentUpon>Form_Add.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_ADD_Read.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_ADD_Read.Designer.cs">
+      <DependentUpon>Form_ADD_Read.cs</DependentUpon>
+    </Compile>
     <Compile Include="MQTTClient配置.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +93,9 @@
     <None Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Form_Add.resx">
       <DependentUpon>Form_Add.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_ADD_Read.resx">
+      <DependentUpon>Form_ADD_Read.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MQTTClient配置.resx">
       <DependentUpon>MQTTClient配置.cs</DependentUpon>
