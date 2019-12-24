@@ -1,5 +1,8 @@
-﻿using System;
+﻿using OPCAutomation;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,24 +11,19 @@ namespace DataCollection
 {
     class Program
     {
+        private static OPCServer opcServer=null;
         static void Main(string[] args)
         {
-            OPCHelp oPCHelp = new OPCHelp();
-            string localName = oPCHelp.GetLocalName();
-            Console.WriteLine(localName);
+            //从配置文件中读取opcServer 名称，IP
+            string opcServerName = ConfigurationManager.AppSettings["opcServerName"].ToString();
+            string opcServerIP= ConfigurationManager.AppSettings["opcServerIP"].ToString();
 
-            List<string> ip = oPCHelp.GetLocalIP();
-            for (int i = 0; i < ip.Count; i++)
+            OPCHelp opcHelper = new OPCHelp();
+            opcServer=opcHelper.ConnectOPCServer(opcServerName, opcServerIP);
+            if (opcServer!=null)
             {
-                Console.WriteLine(ip[i]);
+                Console.WriteLine("连接OPCServer成功！");
             }
-
-            List<string> name= oPCHelp.GetOpcServerName(localName);
-            for (int i = 0; i < name.Count; i++)
-            {
-                Console.WriteLine(name[i]);
-            }
-
             Console.ReadKey();
         }
     }
