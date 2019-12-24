@@ -55,7 +55,7 @@ namespace ControlSystem
             }
             catch (Exception ex)
             {
-
+                btn_connect.Enabled = true;
                 MessageBox.Show(ex.Message);
             }
         }
