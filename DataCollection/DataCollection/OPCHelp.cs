@@ -97,12 +97,12 @@ namespace DataCollection
             }
         }
 
-        public OPCGroup CreateGroup(OPCServer opcServer)
+        public OPCGroup CreateGroup(OPCServer opcServer,string groupName)
         {
             try
             {
                 OPCGroups groups = opcServer.OPCGroups;
-                OPCGroup group = groups.Add("OPCDotNetGroup1");
+                OPCGroup group = groups.Add(groupName);
                 return group;
             }
             catch (Exception err)
