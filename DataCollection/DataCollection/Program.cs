@@ -209,11 +209,11 @@ namespace DataCollection
                     {
                         if (i < 9)
                         {
-                            tableName.Add("YC_F0" + (i + 1).ToString());
+                            tableName.Add("YC_I0" + (i + 1).ToString());
                         }
                         else
                         {
-                            tableName.Add("YC_F" + (i + 1).ToString());
+                            tableName.Add("YC_I" + (i + 1).ToString());
                         }
                     }
 
@@ -251,9 +251,9 @@ namespace DataCollection
                             
                         }
                         string lastPoint1 = "0";
-                        string lastPoint2 = nowtime;
+                        string lastPoint2 = "null";
                         string lastPoint3 = "0";
-                        sql[i] += lastPoint1 + "," + "to_date('" + lastPoint2 + "','yyyy-mm-dd hh24:mi:ss')," + lastPoint3 + ")";
+                        sql[i] += lastPoint1 + "," + lastPoint2+ "," + lastPoint3+")";
                         //SaveTextFile("1.txt", sql[i]);
                         try
                         {
