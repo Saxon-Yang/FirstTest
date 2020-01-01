@@ -50,7 +50,7 @@ namespace ControlSystem
                 client = new MqttClient(IP);
                 string clientId = Guid.NewGuid().ToString();
                 client.Connect(clientId);
-                client.Subscribe(new string[] { "/home/temperature" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+                client.Subscribe(new string[] { "tttt" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
                 client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
             }
             catch (Exception ex)
