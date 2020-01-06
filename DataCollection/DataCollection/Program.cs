@@ -14,7 +14,6 @@ namespace DataCollection
     {
         public static int firstCompare = 1;
         public static string nowtime = null;
-        public static string tnowtime = null;
         public static Dictionary<string, string> itemvalues = new Dictionary<string, string>();
         public static Dictionary<string, string> itemvaluesTempOld = new Dictionary<string, string>();
         public static Dictionary<string, string> itemvaluesTemp;
@@ -87,7 +86,6 @@ namespace DataCollection
             Console.WriteLine("-------初始化点完成------");
             Console.WriteLine("-------初始化点用时" + ts.TotalSeconds + "s" + "------");
             nowtime = DateTime.Now.ToString();
-            tnowtime = DateTime.Now.ToString();
 
             #region 测试代码
 
@@ -328,6 +326,7 @@ namespace DataCollection
 
         private static void CompareValue()
         {
+            string tnowtime = Convert.ToDateTime(nowtime).AddSeconds(-10).ToString();
             if (firstCompare == 1)     //初始化的时候把第一次拿到的值作为比较标准值,只执行一次
             {
                 for (int i = 0; i < 96; i++)
@@ -361,7 +360,7 @@ namespace DataCollection
             {
                 if (Double.Equals(stepChangeStateCompare[i], stepChangeState[i]) == false)
                 {
-                    SaveTextFile("log1.txt", stepChangeStateCompare[i].ToString() + "======>" + stepChangeState[i].ToString()+ tableName[i]);
+                    SaveTextFile("log1.txt", stepChangeStateCompare[i].ToString() + "======>" + stepChangeState[i].ToString()+ tableName[i]+nowtime+"--->"+tnowtime);
                     Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "step状态变化------");
 
                     sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
@@ -436,8 +435,7 @@ namespace DataCollection
             {
                 if (Double.Equals(IsolationvalOpenChangeStateCompare[i], IsolationvalOpenChangeState[i]) == false)
                 {
-                    SaveTextFile("log2.txt", IsolationvalOpenChangeStateCompare[i].ToString() + "======>" + IsolationvalOpenChangeState[i].ToString()+ tableName[i]);
-                    string dtime = DateTime.Now.ToString();
+                    SaveTextFile("log4.txt", IsolationvalOpenChangeStateCompare[i].ToString() + "======>" + IsolationvalOpenChangeState[i].ToString()+ tableName[i]);
                     Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "隔离阀状态变化------");
 
                     sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
@@ -478,7 +476,7 @@ namespace DataCollection
                     }
                     string lastPoint1 = "0";
                     string lastPoint2 = "null";
-                    string lastPoint3 = "2";
+                    string lastPoint3 = "4";
                     sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
 
                     OracleConnection conn = null;
@@ -512,8 +510,7 @@ namespace DataCollection
             {
                 if (Double.Equals(mainHeaterStatusChangeStateCompare[i], mainHeaterStatusChangeState[i]) == false)
                 {
-                    SaveTextFile("log3.txt", mainHeaterStatusChangeStateCompare[i].ToString() + "======>" + mainHeaterStatusChangeState[i].ToString()+ tableName[i]);
-                    string dtime = DateTime.Now.ToString();
+                    SaveTextFile("log2.txt", mainHeaterStatusChangeStateCompare[i].ToString() + "======>" + mainHeaterStatusChangeState[i].ToString()+ tableName[i]);
                     Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "主加热状态变化------");
 
                     sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
@@ -554,7 +551,7 @@ namespace DataCollection
                     }
                     string lastPoint1 = "0";
                     string lastPoint2 = "null";
-                    string lastPoint3 = "3";
+                    string lastPoint3 = "2";
                     sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
 
                     OracleConnection conn = null;
@@ -584,11 +581,11 @@ namespace DataCollection
             }
             m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
 
-            for (int i = 0; i < 96; i++)      //真空泵值不相等
+            for (int i = 0; i < 96; i++)      //主泵值不相等
             {
                 if (Double.Equals(mainPumpStatusChangeStateCompare[i], mainPumpStatusChangeState[i]) == false)
                 {
-                    SaveTextFile("log4.txt", mainPumpStatusChangeStateCompare[i].ToString() + "======>" + mainPumpStatusChangeState[i].ToString()+ tableName[i]);
+                    SaveTextFile("log3.txt", mainPumpStatusChangeStateCompare[i].ToString() + "======>" + mainPumpStatusChangeState[i].ToString()+ tableName[i]);
                     string dtime = DateTime.Now.ToString();
                     Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "真空泵状态变化------");
 
@@ -630,7 +627,7 @@ namespace DataCollection
                     }
                     string lastPoint1 = "0";
                     string lastPoint2 = "null";
-                    string lastPoint3 = "4";
+                    string lastPoint3 = "3";
                     sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
 
                     OracleConnection conn = null;
@@ -655,7 +652,7 @@ namespace DataCollection
                 else
                 {
                     n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到真空泵状态变化！");
+                    Console.WriteLine("未检测到主泵状态变化！");
                 }
             }
             m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
@@ -739,7 +736,6 @@ namespace DataCollection
                 mainPumpStatusChangeStateCompare[i] = mainPumpStatusChangeState[i];
                 functionStateCompare[i] = functionState[i];
             }  //改变比较的标准值
-            tnowtime = Convert.ToDateTime(nowtime).AddSeconds(1).ToString();
 
         }
 
