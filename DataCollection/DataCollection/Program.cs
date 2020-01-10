@@ -14,10 +14,12 @@ namespace DataCollection
     {
         public static int firstCompare = 1;
         public static string nowtime = null;
+        public static string tnowtime = null;
+        public static string tag = "";
         public static Dictionary<string, string> itemvalues = new Dictionary<string, string>();
         public static Dictionary<string, string> itemvaluesTempOld = new Dictionary<string, string>();
         public static Dictionary<string, string> itemvaluesTemp;
-
+        public static int count = 0;
 
         public static double[] stepChangeState = new double[96];//工步变化 STATE
         public static double[] stepChangeStateCompare = new double[96];
@@ -34,6 +36,11 @@ namespace DataCollection
         public static double[] functionState = new double[96];//真空泵变化 MAINPUMPSTATUS
         public static double[] functionStateCompare = new double[96];
 
+        public static string[] stateTag1 = new string[96];
+        public static string[] stateTag2 = new string[96];
+        public static string[] stateTag3 = new string[96];
+        public static string[] stateTag4 = new string[96];
+        public static string[] stateTag5 = new string[96];
 
         public static string oraStr = "";
         public static List<string> itemNames = new List<string>();
@@ -42,9 +49,9 @@ namespace DataCollection
         static void Main(string[] args)
         {
 
-            Thread th1 = new Thread(InsertTaskOnTime);
-            th1.Start();
-            th1.IsBackground = true;
+            //Thread th1 = new Thread(InsertTaskOnTime);
+            //th1.Start();
+            //th1.IsBackground = true;
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -85,7 +92,6 @@ namespace DataCollection
             TimeSpan ts = sw.Elapsed;
             Console.WriteLine("-------初始化点完成------");
             Console.WriteLine("-------初始化点用时" + ts.TotalSeconds + "s" + "------");
-            nowtime = DateTime.Now.ToString();
 
             #region 测试代码
 
@@ -156,7 +162,7 @@ namespace DataCollection
                 sw.Stop();
                 ts = sw.Elapsed;
                 Console.WriteLine("所有值获取完成，花费时间" + ts.TotalSeconds + "s");
-                Thread.Sleep(800);
+                Thread.Sleep(1000);
             }
         }
 
@@ -180,7 +186,7 @@ namespace DataCollection
                 int k = 50;
                 int m = 47;
                 int n = 45;
-                int o =60;
+                int o = 60;
                 Monitor.Enter(itemvalues);
                 itemvaluesTemp = itemvalues;
                 //工步变化  43
@@ -192,7 +198,7 @@ namespace DataCollection
                 //隔离阀状态变化  ISOLATIONVALVEOPEN 50
                 for (int i = 0; i < 96; i++)
                 {
-                    IsolationvalOpenChangeState[i]=(Convert.ToDouble(itemvaluesTemp[itemNames[k]]));
+                    IsolationvalOpenChangeState[i] = (Convert.ToDouble(itemvaluesTemp[itemNames[k]]));
                     k += 65;
 
                 }
@@ -200,14 +206,14 @@ namespace DataCollection
 
                 for (int i = 0; i < 96; i++)
                 {
-                    mainHeaterStatusChangeState[i]=(Convert.ToDouble(itemvaluesTemp[itemNames[m]]));
+                    mainHeaterStatusChangeState[i] = (Convert.ToDouble(itemvaluesTemp[itemNames[m]]));
                     m += 65;
                 }
                 //真空泵变化 MAINPUMPSTATUS   45
 
                 for (int i = 0; i < 96; i++)
                 {
-                    mainPumpStatusChangeState[i]=(Convert.ToDouble(itemvaluesTemp[itemNames[n]]));
+                    mainPumpStatusChangeState[i] = (Convert.ToDouble(itemvaluesTemp[itemNames[n]]));
                     n += 65;
                 }
                 //功能状态变化   60
@@ -216,13 +222,36 @@ namespace DataCollection
                     functionState[i] = (Convert.ToDouble(itemvaluesTemp[itemNames[o]]));
                     o += 65;
                 }
-                Monitor.Exit(itemvalues);
                 Console.WriteLine("++++++需要监测值改变的点已经分发完成++++++");
                 Console.WriteLine("我是另一线程，我对采集数值进行了转移！");
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                CompareValue();
+                if (count / 30 == 1)
+                {
+                    nowtime = DateTime.Now.ToString();
+                    CompareValue1();
+                    InsertTaskOnTime();
+                    count = 0;
+                }
+                else
+                {
+                    tnowtime = DateTime.Now.ToString();
+                    CompareValue();
+                    count++;
+                }
+                //nowtime = DateTime.Now.ToString();
+                //CompareValue();
+                //count++;
+                //if (count==30)
+                //{
+                //    Thread.Sleep(300);
+                //    CompareValue1();
+                //    tnowtime = DateTime.Now.ToString();
+                //    InsertTaskOnTime();
+                //    count = 0;
+                //}
+                Monitor.Exit(itemvalues);
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 Console.WriteLine("++++++监测点值是否变化判断完成+++++++ 用时" + ts.TotalSeconds + "s");
@@ -232,29 +261,31 @@ namespace DataCollection
 
         private static void InsertTaskOnTime()   //每30s插入一条数据
         {
-            while (true)
-            {
-                if (itemvaluesTemp != null)
-                {
-                    int m = 0, n = 65;
-                    int k = 1, q = 0, p = 0;
-                    Stopwatch sw = new Stopwatch();
-                    sw.Start();
-                    string[] sql = new string[96];
-                    List<string> tableName = new List<string>();
-                    for (int i = 0; i < 96; i++)
-                    {
-                        if (i < 9)
-                        {
-                            tableName.Add("YC_I0" + (i + 1).ToString());
-                        }
-                        else
-                        {
-                            tableName.Add("YC_I" + (i + 1).ToString());
-                        }
-                    }
 
-                    for (int i = 0; i < 96; i++)   //获取的点拆分成sql语句
+
+            if (itemvaluesTemp != null)
+            {
+                int m = 0, n = 65;
+                int k = 1, q = 0, p = 0;
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                string[] sql = new string[96];
+                List<string> tableName = new List<string>();
+                for (int i = 0; i < 96; i++)
+                {
+                    if (i < 9)
+                    {
+                        tableName.Add("YC_I0" + (i + 1).ToString());
+                    }
+                    else
+                    {
+                        tableName.Add("YC_I" + (i + 1).ToString());
+                    }
+                }
+
+                for (int i = 0; i < 96; i++)   //获取的点拆分成sql语句
+                {
+                    if (tableName[i].CompareTo(stateTag1[i]) != 0 && tableName[i].CompareTo(stateTag2[i]) != 0 && tableName[i].CompareTo(stateTag3[i]) != 0 && tableName[i].CompareTo(stateTag4[i]) != 0 && tableName[i].CompareTo(stateTag5[i]) != 0)
                     {
                         sql[i] = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
                          BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
@@ -269,7 +300,7 @@ namespace DataCollection
                             upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
                             feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
                             receive_tag,receive_time,remark" + @")"
-                            + " values( to_date('" + nowtime + "','yyyy-mm-dd hh24:mi:ss'),";
+                                            + " values( to_date('" + nowtime + "','yyyy-mm-dd hh24:mi:ss'),";
 
                         if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
                         {
@@ -293,7 +324,7 @@ namespace DataCollection
                         OracleConnection conn = null;
                         try
                         {
-                            string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
+                            string connString = "User ID=djzk_yc;Password=djzkapp01;Data Source=YCDJZK;";
                             conn = new OracleConnection(connString);
                             conn.Open();
                             OracleCommand cmd = new OracleCommand(sql[i], conn);
@@ -308,25 +339,171 @@ namespace DataCollection
                             Console.WriteLine("连接Oracle出错" + ex.Message);
                         }
                     }
-                    sw.Stop();
-                    TimeSpan ts = sw.Elapsed;
-                    Console.WriteLine(">>>>>>>>>>>>单晶炉写入数据完成！用时>>>>>>>>" + ts.TotalSeconds + "s");
-                    Thread.Sleep(30000);
+                    else
+                    {
+                        n += 65; m += 65; k += 1; q += 21; p += 3;
+                    }
                 }
-
-                else
-                {
-                    Console.WriteLine("++++++++我是定时保存线程，每30s执行一次,当前数据未刷新，我什么也没做！+++++");
-                    Thread.Sleep(30000);
-                }
-
-                nowtime = Convert.ToDateTime(nowtime).AddSeconds(30).ToString();
+                sw.Stop();
+                TimeSpan ts = sw.Elapsed;
+                Console.WriteLine(">>>>>>>>>>>>单晶炉写入数据完成！用时>>>>>>>>" + ts.TotalSeconds + "s");
+                //Thread.Sleep(30000);
             }
+
+            else
+            {
+                Console.WriteLine("++++++++我是定时保存线程，每30s执行一次,当前数据未刷新，我什么也没做！+++++");
+                //Thread.Sleep(30000);
+            }
+
+
         }
 
         private static void CompareValue()
         {
-            string tnowtime = Convert.ToDateTime(nowtime).AddSeconds(-10).ToString();
+
+            if (firstCompare == 1)     //初始化的时候把第一次拿到的值作为比较标准值,只执行一次
+            {
+                for (int i = 0; i < 96; i++)
+                {
+                    stepChangeStateCompare[i] = stepChangeState[i];
+                    IsolationvalOpenChangeStateCompare[i] = IsolationvalOpenChangeState[i];
+                    mainHeaterStatusChangeStateCompare[i] = mainHeaterStatusChangeState[i];
+                    mainPumpStatusChangeStateCompare[i] = mainPumpStatusChangeState[i];
+                    functionStateCompare[i] = functionState[i];
+                }
+                firstCompare = 2;
+            }
+            string sql = "";
+            int m = 0, n = 65, a = 0, a2 = 0, a3 = 0, a4 = 0;
+            int k = 1, q = 0, p = 0;
+            List<string> tableName = new List<string>();
+            //枚举出64台炉台存储表表名称
+            for (int i = 0; i < 96; i++)
+            {
+                if (i < 9)
+                {
+                    tableName.Add("YC_I0" + (i + 1).ToString());
+                }
+                else
+                {
+                    tableName.Add("YC_I" + (i + 1).ToString());
+                }
+            }
+            for (int i = 0; i < 96; i++)
+            {
+                tag = "";
+                if (Double.Equals(stepChangeStateCompare[i], stepChangeState[i]) == false || Double.Equals(IsolationvalOpenChangeStateCompare[i], IsolationvalOpenChangeState[i]) == false || Double.Equals(mainHeaterStatusChangeStateCompare[i], mainHeaterStatusChangeState[i]) == false || Double.Equals(mainPumpStatusChangeStateCompare[i], mainPumpStatusChangeState[i]) == false || Double.Equals(functionStateCompare[i], functionState[i]) == false)
+                {
+
+                    if (Double.Equals(stepChangeStateCompare[i], stepChangeState[i]) == false)
+                    {
+                        tag += "1";
+                    }
+                    if (Double.Equals(mainHeaterStatusChangeStateCompare[i], mainHeaterStatusChangeState[i]) == false)
+                    {
+                        tag += "2";
+                    }
+                    if (Double.Equals(mainPumpStatusChangeStateCompare[i], mainPumpStatusChangeState[i]) == false)
+                    {
+                        tag += "3";
+                    }
+                    if (Double.Equals(IsolationvalOpenChangeStateCompare[i], IsolationvalOpenChangeState[i]) == false)
+                    {
+                        tag += "4";
+                    }
+                    if (Double.Equals(functionStateCompare[i], functionState[i]) == false)
+                    {
+                        tag += "5";
+                    }
+
+                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
+                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
+                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
+                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
+                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
+                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
+                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
+                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
+                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
+                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
+                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
+                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
+                               receive_tag,receive_time,remark" + @")"
+                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
+
+                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
+                    {
+                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
+                    }
+                    for (int j = m; j < n; j++)
+                    {
+
+                        if (j == (44 * k) + q)
+                        {
+                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
+                        }
+                        else if (j == (50 * k) + a2)
+                        {
+                            sql += IsolationvalOpenChangeState[i] + ",";
+                        }
+                        else
+                        {
+                            sql += itemvaluesTemp[itemNames[j]] + ",";
+                        }
+
+                    }
+                    string lastPoint1 = "0";
+                    string lastPoint2 = "null";
+                    string lastPoint3 = tag;
+                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
+                    OracleConnection conn = null;
+                    try
+                    {
+                        string connString = "User ID=djzk_yc;Password=djzkapp01;Data Source=YCDJZK;";
+                        conn = new OracleConnection(connString);
+                        conn.Open();
+                        OracleCommand cmd = new OracleCommand(sql, conn);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
+                        Console.WriteLine("连接Oracle出错" + ex.Message);
+                    }
+                }
+
+                else
+                {
+                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
+                    Console.WriteLine("未检测到隔离阀状态变化！");
+                }
+            }
+            for (int i = 0; i < 96; i++)
+            {
+                stepChangeStateCompare[i] = stepChangeState[i];
+                IsolationvalOpenChangeStateCompare[i] = IsolationvalOpenChangeState[i];
+                mainHeaterStatusChangeStateCompare[i] = mainHeaterStatusChangeState[i];
+                mainPumpStatusChangeStateCompare[i] = mainPumpStatusChangeState[i];
+                functionStateCompare[i] = functionState[i];
+            }  //改变比较的标准值
+        }
+
+        private static void CompareValue1()
+        {
+            for (int i = 0; i < 96; i++) //每一次比较清空标记
+            {
+                stateTag1[i] = "";
+                stateTag2[i] = "";
+                stateTag3[i] = "";
+                stateTag4[i] = "";
+                stateTag5[i] = "";
+            }
+
+
             if (firstCompare == 1)     //初始化的时候把第一次拿到的值作为比较标准值,只执行一次
             {
                 for (int i = 0; i < 96; i++)
@@ -360,386 +537,72 @@ namespace DataCollection
             {
                 if (Double.Equals(stepChangeStateCompare[i], stepChangeState[i]) == false)
                 {
-                    SaveTextFile("log1.txt", stepChangeStateCompare[i].ToString() + "======>" + stepChangeState[i].ToString()+ tableName[i]+nowtime+"--->"+tnowtime);
-                    Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "step状态变化------");
-
-                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
-                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
-                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
-                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
-                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
-                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
-                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
-                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
-                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
-                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
-                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
-                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
-                               receive_tag,receive_time,remark" + @")"
-                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
-
-                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
-                    {
-                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
-                    }
-                    for (int j = m; j < n; j++)
-                    {
-                        
-                        if (j == (44 * k) + q)
-                        {
-                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
-                        }
-                        else if (j == (43 * k) + a)
-                        {
-                            sql += stepChangeState[i] + ",";
-                        }
-                        else
-                        {
-                            sql += itemvaluesTemp[itemNames[j]] + ",";
-                        }
-
-                    }
-                    string lastPoint1 = "0";
-                    string lastPoint2 = "null";
-                    string lastPoint3 = "1";
-                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
-
-                    OracleConnection conn = null;
-                    try
-                    {
-                        string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
-                        conn = new OracleConnection(connString);
-                        conn.Open();
-                        OracleCommand cmd = new OracleCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                        Console.WriteLine("连接Oracle出错" + ex.Message);
-                    }
+                    stateTag1[i] = tableName[i];
                 }
 
                 else
                 {
-                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到工步状态变化！");
+                    stateTag1[i] = "xxxxxx";
                 }
+
             }
-            m = 0; n = 65; k = 1; q = 0; p = 0;a = 0;a2 = 0;a3 = 0;a4 = 0;
+            m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
 
             for (int i = 0; i < 96; i++)      //隔离阀值不相等
             {
                 if (Double.Equals(IsolationvalOpenChangeStateCompare[i], IsolationvalOpenChangeState[i]) == false)
                 {
-                    SaveTextFile("log4.txt", IsolationvalOpenChangeStateCompare[i].ToString() + "======>" + IsolationvalOpenChangeState[i].ToString()+ tableName[i]);
-                    Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "隔离阀状态变化------");
-
-                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
-                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
-                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
-                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
-                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
-                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
-                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
-                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
-                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
-                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
-                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
-                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
-                               receive_tag,receive_time,remark" + @")"
-                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
-
-                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
-                    {
-                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
-                    }
-                    for (int j = m; j < n; j++)
-                    {
-                        
-                        if (j == (44 * k) + q)
-                        {
-                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
-                        }
-                        else if (j == (50 * k) + a2)
-                        {
-                            sql += IsolationvalOpenChangeState[i] + ",";
-                        }
-                        else
-                        {
-                            sql += itemvaluesTemp[itemNames[j]] + ",";
-                        }
-
-                    }
-                    string lastPoint1 = "0";
-                    string lastPoint2 = "null";
-                    string lastPoint3 = "4";
-                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
-
-                    OracleConnection conn = null;
-                    try
-                    {
-                        string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
-                        conn = new OracleConnection(connString);
-                        conn.Open();
-                        OracleCommand cmd = new OracleCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                        Console.WriteLine("连接Oracle出错" + ex.Message);
-                    }
+                    stateTag2[i] = tableName[i];
                 }
 
                 else
                 {
-                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到隔离阀状态变化！");
+                    stateTag2[i] = "xxxx";
                 }
             }
-            m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
 
             for (int i = 0; i < 96; i++)      //主加值不相等
             {
                 if (Double.Equals(mainHeaterStatusChangeStateCompare[i], mainHeaterStatusChangeState[i]) == false)
                 {
-                    SaveTextFile("log2.txt", mainHeaterStatusChangeStateCompare[i].ToString() + "======>" + mainHeaterStatusChangeState[i].ToString()+ tableName[i]);
-                    Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "主加热状态变化------");
-
-                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
-                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
-                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
-                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
-                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
-                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
-                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
-                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
-                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
-                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
-                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
-                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
-                               receive_tag,receive_time,remark" + @")"
-                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
-
-                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
-                    {
-                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
-                    }
-                    for (int j = m; j < n; j++)
-                    {
-                        
-                        if (j == (44 * k) + q)
-                        {
-                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
-                        }
-                        else if (j == (47 * k) + a3)
-                        {
-                            sql += mainHeaterStatusChangeState[i] + ",";
-                        }
-                        else
-                        {
-                            sql += itemvaluesTemp[itemNames[j]] + ",";
-                        }
-
-                    }
-                    string lastPoint1 = "0";
-                    string lastPoint2 = "null";
-                    string lastPoint3 = "2";
-                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
-
-                    OracleConnection conn = null;
-                    try
-                    {
-                        string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
-                        conn = new OracleConnection(connString);
-                        conn.Open();
-                        OracleCommand cmd = new OracleCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                        Console.WriteLine("连接Oracle出错" + ex.Message);
-                    }
+                    stateTag3[i] = tableName[i];
                 }
 
                 else
                 {
-                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到主加热状态变化！");
+
+                    stateTag3[i] = "xxxx";
                 }
             }
-            m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
+
 
             for (int i = 0; i < 96; i++)      //主泵值不相等
             {
                 if (Double.Equals(mainPumpStatusChangeStateCompare[i], mainPumpStatusChangeState[i]) == false)
                 {
-                    SaveTextFile("log3.txt", mainPumpStatusChangeStateCompare[i].ToString() + "======>" + mainPumpStatusChangeState[i].ToString()+ tableName[i]);
-                    string dtime = DateTime.Now.ToString();
-                    Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "真空泵状态变化------");
-
-                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
-                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
-                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
-                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
-                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
-                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
-                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
-                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
-                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
-                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
-                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
-                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
-                               receive_tag,receive_time,remark" + @")"
-                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
-
-                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
-                    {
-                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
-                    }
-                    for (int j = m; j < n; j++)
-                    {
-                        
-                        if (j == (44 * k) + q)
-                        {
-                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
-                        }
-                        else if (j == (45 * k) + a4)
-                        {
-                            sql += mainPumpStatusChangeState[i] + ",";
-                        }
-                        else
-                        {
-                            sql += itemvaluesTemp[itemNames[j]] + ",";
-                        }
-
-                    }
-                    string lastPoint1 = "0";
-                    string lastPoint2 = "null";
-                    string lastPoint3 = "3";
-                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
-
-                    OracleConnection conn = null;
-                    try
-                    {
-                        string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
-                        conn = new OracleConnection(connString);
-                        conn.Open();
-                        OracleCommand cmd = new OracleCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3;a += 22;a2 += 15;a3 += 18;a4 += 20;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                        Console.WriteLine("连接Oracle出错" + ex.Message);
-                    }
+                    stateTag4[i] = tableName[i];
                 }
 
                 else
                 {
-                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到主泵状态变化！");
+                    stateTag4[i] = "xxxxx";
                 }
             }
-            m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
+
 
             for (int i = 0; i < 96; i++)      //功能状态值不相等
             {
                 if (Double.Equals(functionStateCompare[i], functionState[i]) == false)
                 {
-                    SaveTextFile("log5.txt", functionStateCompare[i].ToString() + "======>" + functionState[i].ToString() + tableName[i]);
-                    Console.WriteLine("-----我是状态变化监测线程，检测到" + tableName[i] + "功能点状态变化------");
-
-                    sql = "insert into " + tableName[i] + @"(" + @"nowtime,DIAMETER,SETDIAMETER,TEMP,MAINHEATER,SETMAINHEATER,
-                            BOTTOMHEATER,SETBOTTOMHEATER,AVGSLSPEED,SETSLSPEED,MELTSURFTEMP,setmeltsurftemp,
-                              meltlevel,setmeltlevel,seedlift,cruciblelift,seedrotation,cruciblerotation,
-                               argonflow,mainpressure100t,mainpressure1000mt,subpressure1000t,diameterpixel,
-                               meltlevelpixel,crystallength,cruciblepos,crystalpos,crystalweight,remainweight,
-                               feederremainweight,feedervibration,feedersetargonflow,feederargonflow,pumpfrequency,
-                               mainheatercurrent,bottomheatercurrent,runtime,feedquantity,unlimitedfeedquantity,
-                               totalfeedquantity,meltlevelcoefficient,crownpixel,leakagerate,setpumpfrequency,
-                               state,crystalid,mainpumpstatus,subpumpstatus,mainheaterstatus,bottomheaterstatus,
-                               manualseed,isolationvalveopen,isolationvalveclose,mainpumpv1,subpumpv3,fastinflationv4,
-                               upperargonv5,lowerargonv6,feedervalveopen,feedervalveclose,furnancecoverclose,
-                               feederstate,feederpressure,crystalid6,ultimatevacuum,hotcheackedleakagerate,
-                               receive_tag,receive_time,remark" + @")"
-                    + " values( to_date('" + tnowtime + "','yyyy-mm-dd hh24:mi:ss'),";
-
-                    if (itemvaluesTemp[itemNames[(62 * k) + p]] == null || itemvaluesTemp[itemNames[(62 * k) + p]] == "")
-                    {
-                        itemvaluesTemp[itemNames[(62 * k) + p]] = "0";
-                    }
-                    for (int j = m; j < n; j++)
-                    {
-
-                        if (j == (44 * k) + q)
-                        {
-                            sql += "'" + itemvaluesTemp[itemNames[j]] + "'" + ",";
-                        }
-                        else
-                        {
-                            sql += itemvaluesTemp[itemNames[j]] + ",";
-                        }
-
-                    }
-                    string lastPoint1 = "0";
-                    string lastPoint2 = "null";
-                    string lastPoint3 = "5";
-                    sql += lastPoint1 + "," + lastPoint2 + "," + lastPoint3 + ")";
-
-                    OracleConnection conn = null;
-                    try
-                    {
-                        string connString = "User ID=YCSCADA;Password=ycscada2019;Data Source=YCSCADA;";
-                        conn = new OracleConnection(connString);
-                        conn.Open();
-                        OracleCommand cmd = new OracleCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                        Console.WriteLine("连接Oracle出错" + ex.Message);
-                    }
+                    stateTag5[i] = tableName[i];
                 }
-
                 else
                 {
-                    n += 65; m += 65; k += 1; q += 21; p += 3; a += 22; a2 += 15; a3 += 18; a4 += 20;
-                    Console.WriteLine("未检测到功能点状态变化！");
+                    stateTag5[i] = "xxxxx";
                 }
             }
-            m = 0; n = 65; k = 1; q = 0; p = 0; a = 0; a2 = 0; a3 = 0; a4 = 0;
-
-            for (int i = 0; i < 96; i++)
-            {
-                stepChangeStateCompare[i] = stepChangeState[i];
-                IsolationvalOpenChangeStateCompare[i] = IsolationvalOpenChangeState[i];
-                mainHeaterStatusChangeStateCompare[i] = mainHeaterStatusChangeState[i];
-                mainPumpStatusChangeStateCompare[i] = mainPumpStatusChangeState[i];
-                functionStateCompare[i] = functionState[i];
-            }  //改变比较的标准值
 
         }
-
-
 
         public static bool SaveTextFile(string path, string content)
         {
